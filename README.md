@@ -188,5 +188,5 @@ Terminates all background processes and exits the shell cleanly.
 
 ---
 
-🧑‍💻 **Author:** Akshith Mavurapu  
+🧑‍💻 **Author:** Akshith Mavurapu , Varun edachali
 📍 **Project Type:** Custom Linux Shell (C)
