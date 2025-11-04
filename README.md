@@ -1,131 +1,192 @@
-My Custom Shell
-This is a custom shell I built from scratch in C. It mimics many of the core functionalities of bash, including foreground/background processes, I/O redirection, piping, and signal handling, while also adding several unique custom commands.
+# 🐚 My Custom Shell
 
-🚀 Getting Started
-1. Compile the Shell
+This is a custom shell I built from scratch in **C**.  
+It mimics many of the core functionalities of **bash**, including foreground/background processes, I/O redirection, piping, and signal handling — while also adding several **unique custom commands**.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Compile the Shell
 To create the executable, run:
-
-Bash
-
+```bash
 make
-2. Run the Shell
+```
+
+### 2. Run the Shell
 Execute the compiled program:
-
-Bash
-
+```bash
 ./a.out
-3. Clean Up
+```
+
+### 3. Clean Up
 To remove the executable and temporary files:
-
-Bash
-
+```bash
 make clean
-✨ Core Features
-Custom Prompt: An informative prompt that shows username@hostname:~relative/path. It also displays the execution time for slow commands (>2s) and uses a * to indicate active background jobs.
+```
 
-System Commands: Execute any standard system command (like ls, grep, sleep, etc.) just as you would in bash.
+---
 
-Background Processes: Run any system command in the background by appending &.
+## ✨ Core Features
 
-Command Chaining: Combine multiple commands on one line using ; (sequential execution) and & (parallel/background execution).
+### 🧭 Custom Prompt
+An informative prompt showing:
+```
+username@hostname:~relative/path
+```
+- Displays execution time for slow commands (>2s)  
+- Uses `*` to indicate active background jobs  
 
-I/O Redirection: Full support for input/output redirection using <, >, and >>.
+### ⚙️ System Commands
+Execute any standard system command (`ls`, `grep`, `sleep`, etc.) just like in bash.
 
-Piping: Chain multiple commands together using |.
+### 🧵 Background Processes
+Run commands in the background using `&`.
 
-Job Control:
+### 🔗 Command Chaining
+Combine multiple commands:
+- Sequential: `;`
+- Parallel (background): `&`
 
-Ctrl+C: Interrupts the current foreground process (SIGINT).
+### 📤 I/O Redirection
+Full support for:
+- Input: `<`
+- Output: `>`
+- Append: `>>`
 
-Ctrl+Z: Stops and backgrounds the current foreground process (SIGTSTP).
+### 🧩 Piping
+Chain multiple commands using `|`.
 
-Ctrl+D: Logs out of the shell cleanly.
+### 🧠 Job Control
+| Shortcut | Description |
+|-----------|-------------|
+| **Ctrl+C** | Interrupts current foreground process (`SIGINT`) |
+| **Ctrl+Z** | Stops and backgrounds the current process (`SIGTSTP`) |
+| **Ctrl+D** | Exits the shell cleanly |
+| **fg <pid>** | Brings background job to foreground |
+| **bg <pid>** | Resumes a stopped background job |
 
-fg <pid>: Brings a background job to the foreground.
+---
 
-bg <pid>: Resumes a stopped background job.
+## 🛠️ Custom Commands
 
-🛠️ Custom Commands
-I've built several custom commands to extend the shell's functionality:
+### 🔹 `warp <path>`
+- Equivalent to `cd`  
+- Supports `~` (home), `-` (previous directory), and relative/absolute paths  
+- Example:  
+  ```bash
+  warp ~/projects
+  ```
 
-warp <path>
+---
 
-My equivalent of cd. It changes the current working directory.
+### 🔹 `peek <flags> <path>`
+- Equivalent to `ls`  
+- Supports:
+  - `-l`: Long listing  
+  - `-a`: Show hidden files  
+- Colors:
+  - Blue → directories  
+  - Green → executables  
+  - White → files  
+- Example:  
+  ```bash
+  peek -la .
+  ```
 
-Supports ~ for home, - for the previous directory, and standard paths.
+---
 
-Example: warp ~/projects
+### 🔹 `seek <flags> <search> <target_dir>`
+Search for files or directories within a target directory.  
+Flags:
+- `-f`: Search files only  
+- `-d`: Search directories only  
+- `-e`: If exactly one match found, `warp` (if dir) or print contents (if file)  
 
-peek <flags> <path>
+Example:
+```bash
+seek -f "README.md" .
+```
 
-My equivalent of ls. It lists files and directories.
+---
 
-Supports -l (long listing) and -a (show hidden files).
+### 🔹 `pastevents`
+Command history manager (stores last 15 commands).
 
-Directories are colored blue, executables green, and files white.
+- `pastevents` → Display history  
+- `pastevents execute <index>` → Re-run command at index  
+- `pastevents purge` → Clear history  
 
-Example: peek -la .
+---
 
-seek <flags> <search> <target_dir>
+### 🔹 `iMan <command_name>`
+Fetches and prints the **man page** for a command from **man.he.net**, showing:
+- Name
+- Synopsis
+- Description  
 
-Searches for files or directories within a target directory.
+Example:
+```bash
+iMan grep
+```
 
--f: Search for files only.
+---
 
--d: Search for directories only.
+### 🔹 `proclore <pid>`
+Shows detailed process info:
+- PID  
+- Status  
+- Process group  
+- Virtual memory  
+- Executable path  
 
--e: If exactly one match is found, warp to it (if a dir) or print its contents (if a file).
+If no PID is given, shows info for the shell itself.
 
-Example: seek -f "README.md" .
+---
 
-pastevents
+### 🔹 `activities`
+Lists all background processes:
+- PID  
+- Command name  
+- Current state (Running/Stopped)
 
-My command history (stores the last 15 commands).
+---
 
-pastevents: Displays all commands from history.
+### 🔹 `ping <pid> <signal_number>`
+Sends a specific signal to a process.  
+Example:
+```bash
+ping 12345 9
+```
 
-pastevents execute <index>: Executes the command at the given (1-based) index.
+---
 
-pastevents purge: Clears all command history.
+### 🔹 `neonate -n <time>`
+Prints PID of the **most recently created process** every `<time>` seconds (default 1s).  
+Press `x` to stop.  
 
-iMan <command_name>
+---
 
-Fetches the man page for a command directly from man.he.net using a GET request and prints its Name, Synopsis, and Description.
-
-Example: iMan grep
-
-proclore <pid>
-
-Prints detailed information about a process, including its PID, status, process group, virtual memory, and executable path. If no pid is given, it describes the shell itself.
-
-activities
-
-Lists all background processes spawned by this shell, showing their PID, command name, and current state (Running/Stopped).
-
-ping <pid> <signal_number>
-
-Sends a specific signal to a given process.
-
-Example: ping 12345 9 (sends SIGKILL)
-
-neonate -n <time>
-
-Prints the process ID of the most recently created process on the system every <time> seconds (default is 1s). Press x to stop.
-
-exit
-
+### 🔹 `exit`
 Terminates all background processes and exits the shell cleanly.
 
-💡 Unique Design Choices
-Smart Parsing: The shell intelligently handles double quotes ("), allowing for strings that contain special characters. For example, echo "hello > world" will print the literal string, not perform redirection.
+---
 
-Normalized History: pastevents stores a "canonical" version of commands. This means sleep 5 and sleep "5" are treated as the same command, making history more consistent and useful.
+## 💡 Unique Design Choices
 
-Improved Piping: Unlike bash, my shell handles continuous pipes (e.g., cmd1 | | cmd2) by treating the empty space as a "void" command, allowing the pipeline to continue.
+- **Smart Parsing:** Handles double quotes (`"..."`) so commands like `echo "hello > world"` print literally.  
+- **Normalized History:** `pastevents` stores canonical versions (e.g., `sleep 5` and `sleep "5"` are identical).  
+- **Improved Piping:** Handles cases like `cmd1 | | cmd2` gracefully, treating the gap as a no-op.
 
-⚠️ Known Limitations
-Tokenization: My parser splits by spaces, so it cannot handle file or directory names that contain spaces.
+---
 
-Quotes: Only double quotes ("...") are supported for strings; single quotes ('...') are not.
+## ⚠️ Known Limitations
 
-Backgrounding: Custom commands (like warp, peek, etc.) cannot be run in the background with &.
+- **Tokenization:** Cannot handle filenames/directories with spaces.  
+- **Quotes:** Only double quotes (`"`) are supported, not single quotes (`'`).  
+- **Backgrounding:** Custom commands (like `warp`, `peek`, etc.) cannot run in the background.
+
+---
+
+🧑‍💻 **Author:** Akshith Mavurapu  
+📍 **Project Type:** Custom Linux Shell (C)
